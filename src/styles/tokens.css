@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-surface-100: #f6f7f9;
+  --color-surface-200: #ffffff;
+  --color-surface-300: #edf0f4;
+  --color-border: #e4e7ec;
+  --color-border-strong: #8890a0;
+  --color-ink: #171a21;
+  --color-ink-muted: #545c6a;
+  --color-brand: #2563eb;
+  --color-brand-hover: #1d4ed8;
+  --color-brand-tint: #eaf1ff;
+  --color-on-brand: #ffffff;
+  --color-accent: #d97706;
+  --color-success: #15803d;
+  --color-danger: #dc2626;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --shadow-sm:
+    0 1px 2px rgba(23, 26, 33, 0.06), 0 1px 1px rgba(23, 26, 33, 0.04);
+  --shadow-md: 0 8px 24px rgba(23, 26, 33, 0.12);
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-surface-100);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * Reusable pieces shared across many views (cards, form fields, buttons, chips).
+ * Everything else is expressed as Tailwind utilities directly in each component.
+ */
+@layer components {
+  .card {
+    @apply box-border rounded-md border border-border bg-surface-200 p-6;
+  }
+  .heading-sm {
+    @apply m-0 font-display text-base font-semibold text-ink;
+  }
+  .field {
+    @apply h-10 w-full rounded-sm border border-border-strong bg-surface-300 px-3 font-sans text-[15px] text-ink focus:bg-surface-200;
+  }
+  .area {
+    @apply w-full resize-y rounded-sm border border-border-strong bg-surface-300 px-3 py-2.5 font-sans text-[15px] text-ink;
+  }
+  .field-label {
+    @apply mb-1.5 block font-sans text-[13px] font-semibold text-ink-muted;
+  }
+  .iconbtn {
+    @apply flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-sm border border-border bg-surface-200 text-ink-muted hover:border-danger hover:text-danger;
+  }
+  .smallbtn {
+    @apply inline-flex items-center gap-1.5 rounded-sm border border-border-strong bg-surface-200 px-3 py-1.5 font-sans text-[13px] font-semibold text-ink hover:border-brand hover:text-brand;
+  }
+  .chip {
+    @apply inline-flex items-center rounded-full border border-border bg-surface-200 px-4 py-2 font-sans text-[13px] font-semibold text-ink-muted;
+  }
+  .chip-on {
+    @apply border-brand bg-brand-tint text-brand;
+  }
+  .tcard {
+    @apply flex flex-col overflow-hidden rounded-md border border-border bg-surface-200 shadow-sm;
+  }
+  .tcard-sel {
+    @apply border-2 border-brand shadow-md;
+  }
+  .tfooter {
+    @apply flex flex-col gap-0.5 border-t border-border px-4 pb-4 pt-3.5;
+  }
+  .tname {
+    @apply font-sans text-[15px] font-semibold text-ink;
+  }
+  .ttag {
+    @apply font-sans text-[13px] text-ink-muted;
+  }
+  .usebtn {
+    @apply mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-sm border border-border-strong bg-surface-200 px-2 py-2 font-sans text-[13px] font-semibold text-ink;
+  }
+  .usebtn-sel {
+    @apply border-brand bg-brand text-on-brand;
+  }
+  .swatch {
+    @apply h-7 w-7 rounded-full border-2 border-transparent p-0;
+  }
+  .swatch-sel {
+    @apply border-ink shadow-[0_0_0_2px_var(--color-surface-200)];
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm border-none bg-brand px-[22px] py-3 font-sans text-sm font-semibold text-on-brand hover:bg-brand-hover disabled:cursor-not-allowed disabled:bg-border-strong;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm border border-border-strong bg-surface-200 px-[22px] py-3 font-sans text-sm font-semibold text-ink;
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #resume-print-root,
+  #resume-print-root * {
+    visibility: visible;
+  }
+  #resume-print-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: none !important;
+  }
+}

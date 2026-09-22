@@ -1,0 +1,1 @@
+var e={sans:`system-ui, -apple-system, "Segoe UI", sans-serif`,serif:`Georgia, "Times New Roman", serif`,mono:`"Courier New", Courier, monospace`};function t(t){return e[t]}export{t};
