@@ -17,6 +17,10 @@ const familyComponents: Record<TemplateFamily, Component> = {
   'banner-header': defineAsyncComponent(
     () => import('@/presentation/components/resume-templates/BannerHeaderTemplate.vue'),
   ),
+  professional: defineAsyncComponent(
+    () => import('@/presentation/components/resume-templates/ProfessionalTemplate.vue'),
+  ),
+  elegant: defineAsyncComponent(() => import('@/presentation/components/resume-templates/ElegantTemplate.vue')),
 }
 
 export function useTemplateRegistry() {

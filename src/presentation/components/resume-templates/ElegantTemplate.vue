@@ -100,5 +100,38 @@ const contactParts = computed(() =>
         </template>
       </div>
     </section>
+
+    <!-- Languages -->
+    <section v-if="resume.languages.length" class="mt-8">
+      <div class="flex items-center gap-4">
+        <span class="h-px flex-1" :style="{ background: theme.accentColor, opacity: 0.4 }" />
+        <h2 class="m-0 text-[14px] font-semibold uppercase tracking-[3px]" :style="{ color: theme.accentColor }">Languages</h2>
+        <span class="h-px flex-1" :style="{ background: theme.accentColor, opacity: 0.4 }" />
+      </div>
+      <div class="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1.5 text-[12.5px] text-[#374151]">
+        <span v-for="lang in resume.languages" :key="lang.id">
+          {{ lang.name }}<span v-if="lang.level" class="text-[#6b7280]"> — {{ lang.level }}</span>
+        </span>
+      </div>
+    </section>
+
+    <!-- References -->
+    <section v-if="resume.references.length" class="mt-8">
+      <div class="flex items-center gap-4">
+        <span class="h-px flex-1" :style="{ background: theme.accentColor, opacity: 0.4 }" />
+        <h2 class="m-0 text-[14px] font-semibold uppercase tracking-[3px]" :style="{ color: theme.accentColor }">References</h2>
+        <span class="h-px flex-1" :style="{ background: theme.accentColor, opacity: 0.4 }" />
+      </div>
+      <div class="mt-4 grid grid-cols-2 gap-x-8 gap-y-4 text-center">
+        <div v-for="entry in resume.references" :key="entry.id">
+          <div class="text-[13px] font-semibold text-[#111827]">{{ entry.name }}</div>
+          <div v-if="entry.title || entry.company" class="text-[12px] italic text-[#4b5563]">
+            {{ [entry.title, entry.company].filter(Boolean).join(', ') }}
+          </div>
+          <div v-if="entry.relation" class="text-[11.5px] text-[#6b7280]">{{ entry.relation }}</div>
+          <div class="text-[11.5px] text-[#6b7280]">{{ [entry.phone, entry.email].filter(Boolean).join('  •  ') }}</div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>

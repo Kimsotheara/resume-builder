@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Briefcase, GraduationCap, Globe, Mail, MapPin, Phone, User } from '@lucide/vue'
+import { Briefcase, GraduationCap, Globe, Mail, MapPin, Phone, User, Users } from '@lucide/vue'
 import { computed } from 'vue'
 
 import { resolveFontStack } from '@/application/templates/templateFonts'
@@ -84,6 +84,17 @@ const initials = computed(() => {
           <div class="mt-0.5 text-[10.5px] text-white/60">{{ entry.dates }}</div>
         </div>
       </template>
+
+      <template v-if="resume.languages.length">
+        <div class="my-6 h-px bg-white/20" />
+        <div class="text-[11px] font-bold uppercase tracking-[1.2px] text-white/90">Languages</div>
+        <div class="mt-3 space-y-1.5">
+          <div v-for="lang in resume.languages" :key="lang.id" class="flex items-baseline justify-between gap-2 text-[11.5px]">
+            <span class="text-white/90">{{ lang.name }}</span>
+            <span class="text-white/60">{{ lang.level }}</span>
+          </div>
+        </div>
+      </template>
     </aside>
 
     <!-- Main -->
@@ -122,6 +133,28 @@ const initials = computed(() => {
           <ul class="mt-1.5 list-disc pl-4 text-[12.5px] leading-[19px] text-[#374151]">
             <li v-for="(highlight, i) in entry.highlights.filter(Boolean)" :key="i">{{ highlight }}</li>
           </ul>
+        </div>
+      </template>
+
+      <template v-if="resume.references.length">
+        <div class="mt-7 flex items-center gap-2.5">
+          <span class="flex h-7 w-7 items-center justify-center rounded-md text-white" :style="{ background: theme.accentColor }">
+            <Users :size="15" />
+          </span>
+          <h2 class="m-0 text-[14px] font-bold uppercase tracking-[1px]" :style="{ color: theme.accentColor }">
+            References
+          </h2>
+        </div>
+        <div class="mt-2 h-px w-full" :style="{ background: theme.accentColor, opacity: 0.25 }" />
+        <div class="mt-3 grid grid-cols-2 gap-x-6 gap-y-3">
+          <div v-for="entry in resume.references" :key="entry.id">
+            <div class="text-[12.5px] font-bold text-[#111827]">{{ entry.name }}</div>
+            <div v-if="entry.title || entry.company" class="text-[11.5px] font-medium" :style="{ color: secondary }">
+              {{ [entry.title, entry.company].filter(Boolean).join(', ') }}
+            </div>
+            <div v-if="entry.relation" class="text-[11px] italic text-[#6b7280]">{{ entry.relation }}</div>
+            <div class="mt-0.5 text-[11px] text-[#6b7280]">{{ [entry.phone, entry.email].filter(Boolean).join('  ·  ') }}</div>
+          </div>
         </div>
       </template>
 

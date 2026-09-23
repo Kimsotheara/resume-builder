@@ -245,4 +245,55 @@ export const templateDefinitions: TemplateDefinition[] = [
     tags: ['Two-column', 'Creative'],
     theme: { accentColor: '#be123c', fontFamily: 'sans' },
   },
+
+  {
+    id: 'corporate',
+    name: 'Corporate',
+    family: 'professional',
+    tags: ['Two-column', 'Modern'],
+    theme: { accentColor: '#1b2a41', secondaryColor: '#2f4770', fontFamily: 'sans' },
+  },
+  {
+    id: 'amber',
+    name: 'Amber',
+    family: 'professional',
+    tags: ['Two-column', 'Creative'],
+    theme: { accentColor: '#292524', secondaryColor: '#ea580c', fontFamily: 'sans' },
+  },
+  {
+    id: 'pine',
+    name: 'Pine',
+    family: 'professional',
+    tags: ['Two-column', 'Modern'],
+    theme: { accentColor: '#14532d', secondaryColor: '#2f855a', fontFamily: 'sans' },
+  },
+  {
+    id: 'sterling',
+    name: 'Sterling',
+    family: 'professional',
+    tags: ['Two-column', 'Modern'],
+    theme: { accentColor: '#334155', secondaryColor: '#64748b', fontFamily: 'sans' },
+  },
+
+  {
+    id: 'sonnet',
+    name: 'Sonnet',
+    family: 'elegant',
+    tags: ['Minimal', 'ATS-friendly'],
+    theme: { accentColor: '#1a1a1a', fontFamily: 'serif' },
+  },
+  {
+    id: 'bordeaux',
+    name: 'Bordeaux',
+    family: 'elegant',
+    tags: ['Minimal', 'ATS-friendly'],
+    theme: { accentColor: '#7f1d1d', fontFamily: 'serif' },
+  },
+  {
+    id: 'oxford',
+    name: 'Oxford',
+    family: 'elegant',
+    tags: ['Minimal', 'ATS-friendly'],
+    theme: { accentColor: '#1e3a8a', fontFamily: 'serif' },
+  },
 ]

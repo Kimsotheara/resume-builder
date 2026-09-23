@@ -55,7 +55,16 @@ export interface ResumeData {
   meta: ResumeMeta
 }
 
-export type TemplateFamily = 'minimal' | 'sidebar' | 'bold-header' | 'timeline' | 'plain' | 'photo-sidebar' | 'banner-header'
+export type TemplateFamily =
+  | 'minimal'
+  | 'sidebar'
+  | 'bold-header'
+  | 'timeline'
+  | 'plain'
+  | 'photo-sidebar'
+  | 'banner-header'
+  | 'professional'
+  | 'elegant'
 
 export type TemplateTag = 'Modern' | 'Creative' | 'Minimal' | 'Two-column' | 'Timeline' | 'ATS-friendly'
 
