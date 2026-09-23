@@ -12,12 +12,22 @@ export async function extractTextFromPdf(file: File): Promise<string> {
   for (let pageNumber = 1; pageNumber <= doc.numPages; pageNumber += 1) {
     const page = await doc.getPage(pageNumber)
     const content = await page.getTextContent()
-    const line = content.items
-      .map((item) => ('str' in item ? item.str : ''))
-      .join(' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-    pageTexts.push(line)
+
+    // Each text item marks `hasEOL` when it ends a visual line in the PDF. Without
+    // using it, a whole page collapses into one giant line and the section-heading
+    // heuristics downstream (which key off short, isolated lines) can never match.
+    let pageText = ''
+    for (const item of content.items) {
+      if (!('str' in item)) continue
+      pageText += item.str
+      pageText += item.hasEOL ? '\n' : ' '
+    }
+    pageTexts.push(pageText)
   }
-  return pageTexts.join('\n')
+
+  return pageTexts
+    .join('\n')
+    .replace(/[^\S\n]+/g, ' ')
+    .replace(/ *\n */g, '\n')
+    .trim()
 }
