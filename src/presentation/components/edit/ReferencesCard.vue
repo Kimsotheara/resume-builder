@@ -58,6 +58,16 @@ const resumeStore = useResumeStore()
           />
         </div>
         <div>
+          <label class="field-label">Relationship</label>
+          <input
+            class="field"
+            type="text"
+            placeholder="e.g. Manager, Teacher"
+            :value="entry.relation"
+            @input="resumeStore.updateReference(entry.id, { relation: ($event.target as HTMLInputElement).value })"
+          />
+        </div>
+        <div>
           <label class="field-label">Phone</label>
           <input
             class="field"

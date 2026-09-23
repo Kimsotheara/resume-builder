@@ -2,8 +2,33 @@
 import { Plus, Trash2 } from '@lucide/vue'
 
 import { useResumeStore } from '@/application/stores/resume.store'
+import SelectField from '@/presentation/components/edit/SelectField.vue'
 
 const resumeStore = useResumeStore()
+
+const LANGUAGE_OPTIONS = [
+  'English',
+  'Khmer',
+  'Chinese (Mandarin)',
+  'Cantonese',
+  'French',
+  'Spanish',
+  'German',
+  'Japanese',
+  'Korean',
+  'Thai',
+  'Vietnamese',
+  'Hindi',
+  'Arabic',
+  'Portuguese',
+  'Russian',
+  'Italian',
+  'Indonesian',
+  'Malay',
+  'Tagalog',
+]
+
+const LEVEL_OPTIONS = ['Native', 'Fluent', 'Advanced', 'Intermediate', 'Basic']
 </script>
 
 <template>
@@ -32,21 +57,20 @@ const resumeStore = useResumeStore()
       <div class="grid grid-cols-1 gap-3 pr-10 sm:grid-cols-2">
         <div>
           <label class="field-label">Language</label>
-          <input
-            class="field"
-            type="text"
-            :value="entry.name"
-            @input="resumeStore.updateLanguage(entry.id, { name: ($event.target as HTMLInputElement).value })"
+          <SelectField
+            :model-value="entry.name"
+            :options="LANGUAGE_OPTIONS"
+            placeholder="Select a language"
+            @update:model-value="resumeStore.updateLanguage(entry.id, { name: $event })"
           />
         </div>
         <div>
           <label class="field-label">Level</label>
-          <input
-            class="field"
-            type="text"
-            placeholder="Fluent, Intermediate…"
-            :value="entry.level"
-            @input="resumeStore.updateLanguage(entry.id, { level: ($event.target as HTMLInputElement).value })"
+          <SelectField
+            :model-value="entry.level"
+            :options="LEVEL_OPTIONS"
+            placeholder="Select a level"
+            @update:model-value="resumeStore.updateLanguage(entry.id, { level: $event })"
           />
         </div>
       </div>

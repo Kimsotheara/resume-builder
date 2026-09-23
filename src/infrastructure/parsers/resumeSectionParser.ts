@@ -18,12 +18,19 @@ const DATE_SINGLE_PATTERN = new RegExp(`^${DATE_TOKEN}$`, 'i')
 const BULLET_ONLY_PATTERN = /^[•\-*◦‣▪]+$/
 const BULLET_PREFIX_PATTERN = /^[•\-*◦‣▪]\s*/
 
-const SECTION_HEADINGS: Record<'experience' | 'education' | 'skills' | 'references' | 'languages', RegExp> = {
+const TITLE_HINT_PATTERN =
+  /\b(engineer|developer|manager|designer|analyst|consultant|architect|administrator|specialist|lead|director|officer|intern|programmer|scientist|accountant|marketing|sales|teacher|nurse|technician|assistant|coordinator|executive|freelanc)\w*\b/i
+
+const SECTION_HEADINGS: Record<
+  'experience' | 'education' | 'skills' | 'references' | 'languages' | 'contact',
+  RegExp
+> = {
   experience: /^(work\s+)?experience|employment history$/i,
   education: /^education$/i,
   skills: /^(skills|technical skills|core competencies)$/i,
   references: /^references?$/i,
   languages: /^languages?$/i,
+  contact: /^contact(?:\s+(?:info(?:rmation)?|details))?$/i,
 }
 
 type SectionKey = keyof typeof SECTION_HEADINGS | 'summary'
@@ -71,12 +78,30 @@ function stripBullet(line: string): string {
   return line.replace(BULLET_PREFIX_PATTERN, '').trim()
 }
 
+function endsSentence(line: string): boolean {
+  return /[.!?]$/.test(line.trim())
+}
+
+function hasBulletMarker(line: string): boolean {
+  return BULLET_PREFIX_PATTERN.test(line) || BULLET_ONLY_PATTERN.test(line)
+}
+
 interface RawDatedEntry {
   labels: string[]
   dates: string
   details: string[]
 }
 
+/**
+ * Split a section's lines into dated entries (a job or a degree).
+ *
+ * Handles both label orderings seen in the wild:
+ *  - label(s) then date  (e.g. "Software Engineer" / "Acme" / "2020 - 2022")
+ *  - date then label(s)  (e.g. "2020 - 2022" / "Software Engineer" / "Acme")
+ *
+ * Wrapped detail lines (a bullet that spilled onto a second visual line) are
+ * merged back into the highlight they belong to rather than becoming their own.
+ */
 function splitDatedEntries(lines: string[]): RawDatedEntry[] {
   const entries: RawDatedEntry[] = []
   let pendingLabels: string[] = []
@@ -84,35 +109,58 @@ function splitDatedEntries(lines: string[]): RawDatedEntry[] {
   let current: RawDatedEntry | null = null
   let awaitingContinuation = false
 
-  function pushDetail(text: string) {
-    if (current) current.details.push(text)
-    else prefaceDetails.push(text)
+  const detailTarget = (): string[] => (current ? current.details : prefaceDetails)
+
+  function appendContinuation(line: string) {
+    const target = detailTarget()
+    if (target.length) target[target.length - 1] = `${target[target.length - 1]} ${line}`.trim()
+    else target.push(line)
   }
 
   for (const line of lines) {
     const dateAnchor = extractDateAnchor(line)
     if (dateAnchor) {
-      current = { labels: pendingLabels, dates: dateAnchor, details: [] }
+      current = { labels: [...pendingLabels], dates: dateAnchor, details: [] }
       entries.push(current)
       pendingLabels = []
       awaitingContinuation = false
 
       const rest = line.replace(dateAnchor, '').trim()
       if (rest) {
-        if (isDetailLine(rest)) pushDetail(rest)
-        else current.labels.push(rest)
+        if (isDetailLine(rest)) {
+          current.details.push(stripBullet(rest))
+          awaitingContinuation = !endsSentence(rest)
+        } else {
+          current.labels.push(rest)
+        }
       }
       continue
     }
 
-    if (awaitingContinuation || isDetailLine(line)) {
-      pushDetail(line)
-      const isBulletOnly = BULLET_ONLY_PATTERN.test(line)
-      awaitingContinuation = !isBulletOnly && !/[.!?]$/.test(line)
-    } else {
-      pendingLabels.push(line)
-      awaitingContinuation = false
+    if (hasBulletMarker(line)) {
+      const text = stripBullet(line)
+      detailTarget().push(text)
+      awaitingContinuation = !endsSentence(text)
+      continue
     }
+
+    if (awaitingContinuation) {
+      appendContinuation(line)
+      awaitingContinuation = !endsSentence(line)
+      continue
+    }
+
+    if (isDetailLine(line)) {
+      detailTarget().push(line)
+      awaitingContinuation = !endsSentence(line)
+      continue
+    }
+
+    // A label line. When it directly follows a date (before any highlights) it
+    // belongs to the current entry; otherwise it starts the next entry.
+    if (current && current.details.length === 0) current.labels.push(line)
+    else pendingLabels.push(line)
+    awaitingContinuation = false
   }
 
   if (pendingLabels.length) entries.push({ labels: pendingLabels, dates: '', details: [] })
@@ -151,12 +199,26 @@ function toEducationEntry(entry: RawDatedEntry): ParsedEducationEntry {
   }
 }
 
+// A reference's relationship to the candidate is often printed as a small tag
+// beside their job title (e.g. "Software Manager  Teacher"). Split it into its
+// own field when the title ends with one of these words.
+const RELATION_PATTERN =
+  /\s+(friend|teacher|colleague|classmate|mentor|co-?worker|relative|neighbou?r|family|referee|supervisor|professor|tutor)$/i
+
+function splitTitleAndRelation(line: string): { title: string; relation: string } {
+  const match = line.match(RELATION_PATTERN)
+  if (match && match.index && match.index > 0) {
+    return { title: line.slice(0, match.index).trim(), relation: match[1] }
+  }
+  return { title: line, relation: '' }
+}
+
 function groupReferences(lines: string[]): ParsedReferenceEntry[] {
   const entries: ParsedReferenceEntry[] = []
 
   function ensureCard(startNew: boolean): ParsedReferenceEntry {
     if (startNew || entries.length === 0) {
-      const card: ParsedReferenceEntry = { name: '', title: '', company: '', phone: '', email: '' }
+      const card: ParsedReferenceEntry = { name: '', title: '', company: '', relation: '', phone: '', email: '' }
       entries.push(card)
       return card
     }
@@ -185,11 +247,40 @@ function groupReferences(lines: string[]): ParsedReferenceEntry[] {
       entry.name = name?.trim() ?? line
       if (company) entry.company = company.trim()
     } else {
-      entry.title = line
+      const { title, relation } = splitTitleAndRelation(line)
+      entry.title = title
+      if (relation) entry.relation = relation
     }
   }
 
   return entries.filter((entry) => entry.name || entry.email || entry.phone)
+}
+
+/**
+ * Derive the candidate's name and professional title from the header lines that
+ * appear before the first recognised section. Names are often stacked across
+ * multiple lines (e.g. "KIM" / "SOTHEARA"), so leading short lines are joined
+ * until a title-like line or a complete name is reached.
+ */
+function parseHeader(preamble: string[]): { fullName?: string; title?: string } {
+  const nameParts: string[] = []
+  let title: string | undefined
+  let nameDone = false
+
+  for (const line of preamble) {
+    if (EMAIL_PATTERN.test(line) || findPhone(line)) continue
+    if (TITLE_HINT_PATTERN.test(line)) {
+      if (!title) title = line
+      nameDone = true
+      continue
+    }
+    if (nameDone) continue
+    nameParts.push(line)
+    const wordCount = line.split(/\s+/).length
+    if (wordCount >= 2 || nameParts.length >= 2) nameDone = true
+  }
+
+  return { fullName: nameParts.join(' ').trim() || undefined, title }
 }
 
 export function parseResumeSections(rawText: string): ParsedResumeSections {
@@ -199,8 +290,7 @@ export function parseResumeSections(rawText: string): ParsedResumeSections {
     .filter(Boolean)
 
   const email = rawText.match(EMAIL_PATTERN)?.[0]
-  const phone = findPhone(rawText)
-  const fullName = lines.find((line) => !matchHeading(line) && !EMAIL_PATTERN.test(line) && !findPhone(line))
+  let phone = findPhone(rawText)
 
   const bucket: Record<SectionKey, string[]> = {
     summary: [],
@@ -209,7 +299,9 @@ export function parseResumeSections(rawText: string): ParsedResumeSections {
     skills: [],
     references: [],
     languages: [],
+    contact: [],
   }
+  const preamble: string[] = []
 
   let current: SectionKey | null = null
   for (const line of lines) {
@@ -219,14 +311,28 @@ export function parseResumeSections(rawText: string): ParsedResumeSections {
       if (heading.rest) bucket[heading.key].push(heading.rest)
       continue
     }
-    if (line === fullName) continue
-    if (line === email || line === phone) continue
 
     if (current) {
       bucket[current].push(line)
-    } else if (!bucket.experience.length && !bucket.education.length) {
+    } else if (isDetailLine(line)) {
+      // A paragraph before any heading is most likely an unlabelled summary.
       bucket.summary.push(line)
+    } else {
+      preamble.push(line)
     }
+  }
+
+  const { fullName, title } = parseHeader(preamble)
+
+  // The contact block holds the phone, email and (usually) the location.
+  let location: string | undefined
+  for (const line of bucket.contact) {
+    if (EMAIL_PATTERN.test(line)) continue
+    if (findPhone(line)) {
+      phone = line
+      continue
+    }
+    if (!location && line.split(/\s+/).length <= 5) location = line
   }
 
   const splitLines = (values: string[]): string[] =>
@@ -239,6 +345,8 @@ export function parseResumeSections(rawText: string): ParsedResumeSections {
 
   return {
     fullName,
+    title,
+    location,
     email,
     phone,
     summary: bucket.summary.join(' ').trim() || undefined,

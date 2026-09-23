@@ -24,33 +24,38 @@ function stateOf(index: number): 'done' | 'active' | 'upcoming' {
 
 <template>
   <div class="box-border w-full border-b border-border bg-surface-200 px-4 py-4 sm:px-8 sm:py-6 lg:px-12">
-    <div class="mx-auto flex max-w-[640px] items-center">
-      <template v-for="(step, index) in steps" :key="step.key">
-        <router-link :to="step.route" class="flex items-center gap-2" :aria-label="step.label">
-          <span
-            class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-sans text-[13px] font-semibold"
-            :class="{
-              'bg-accent text-on-brand': stateOf(index) === 'done',
-              'bg-brand text-on-brand': stateOf(index) === 'active',
-              'border border-border-strong bg-surface-300 text-ink-muted': stateOf(index) === 'upcoming',
-            }"
-          >
-            <Check v-if="stateOf(index) === 'done'" :size="14" :stroke-width="2.5" />
-            <template v-else>{{ step.number }}</template>
-          </span>
-          <span
-            class="hidden font-sans text-[13px] font-semibold sm:inline"
-            :class="stateOf(index) === 'upcoming' ? 'text-ink-muted' : 'text-ink'"
-          >
-            {{ step.label }}
-          </span>
-        </router-link>
-        <div
-          v-if="index < steps.length - 1"
-          class="mx-2 h-px flex-1 sm:mx-3"
-          :class="stateOf(index) === 'done' ? 'bg-accent' : 'bg-border'"
-        />
-      </template>
+    <div class="flex items-center gap-3 sm:gap-6">
+      <router-link to="/" class="shrink-0 font-display text-base font-semibold text-ink hover:text-brand sm:text-lg">
+        Resume Builder
+      </router-link>
+      <div class="mx-auto flex w-full max-w-[640px] items-center">
+        <template v-for="(step, index) in steps" :key="step.key">
+          <router-link :to="step.route" class="flex items-center gap-2" :aria-label="step.label">
+            <span
+              class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-sans text-[13px] font-semibold"
+              :class="{
+                'bg-accent text-on-brand': stateOf(index) === 'done',
+                'bg-brand text-on-brand': stateOf(index) === 'active',
+                'border border-border-strong bg-surface-300 text-ink-muted': stateOf(index) === 'upcoming',
+              }"
+            >
+              <Check v-if="stateOf(index) === 'done'" :size="14" :stroke-width="2.5" />
+              <template v-else>{{ step.number }}</template>
+            </span>
+            <span
+              class="hidden font-sans text-[13px] font-semibold sm:inline"
+              :class="stateOf(index) === 'upcoming' ? 'text-ink-muted' : 'text-ink'"
+            >
+              {{ step.label }}
+            </span>
+          </router-link>
+          <div
+            v-if="index < steps.length - 1"
+            class="mx-2 h-px flex-1 sm:mx-3"
+            :class="stateOf(index) === 'done' ? 'bg-accent' : 'bg-border'"
+          />
+        </template>
+      </div>
     </div>
   </div>
 </template>

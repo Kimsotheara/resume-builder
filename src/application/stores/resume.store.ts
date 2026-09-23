@@ -169,7 +169,7 @@ export const useResumeStore = defineStore('resume', {
     },
 
     addReference() {
-      const entry: ReferenceEntry = { id: createId(), name: '', title: '', company: '', phone: '', email: '' }
+      const entry: ReferenceEntry = { id: createId(), name: '', title: '', company: '', relation: '', phone: '', email: '' }
       this.resume.references.push(entry)
       this.persist()
       return entry.id
@@ -231,49 +231,48 @@ export const useResumeStore = defineStore('resume', {
     },
 
     applyParsedSections(sections: ParsedResumeSections) {
+      // An upload loads a whole resume, so replace the parsed sections rather
+      // than appending to whatever is already in the draft (which would
+      // duplicate entries when a file is uploaded more than once).
       if (sections.fullName) this.resume.personalInfo.fullName = sections.fullName
+      if (sections.title) this.resume.personalInfo.title = sections.title
+      if (sections.location) this.resume.personalInfo.location = sections.location
       if (sections.email) this.resume.personalInfo.email = sections.email
       if (sections.phone) this.resume.personalInfo.phone = sections.phone
       if (sections.summary) this.resume.summary = sections.summary
 
-      for (const entry of sections.experienceEntries) {
-        this.resume.experience.push({
-          id: createId(),
-          company: entry.company,
-          role: entry.role,
-          dates: entry.dates,
-          highlights: entry.highlights.length ? entry.highlights : [''],
-        })
-      }
+      this.resume.experience = sections.experienceEntries.map((entry) => ({
+        id: createId(),
+        company: entry.company,
+        role: entry.role,
+        dates: entry.dates,
+        highlights: entry.highlights.length ? entry.highlights : [''],
+      }))
 
-      for (const entry of sections.educationEntries) {
-        this.resume.education.push({
-          id: createId(),
-          school: entry.school,
-          degree: entry.degree,
-          dates: entry.dates,
-        })
-      }
+      this.resume.education = sections.educationEntries.map((entry) => ({
+        id: createId(),
+        school: entry.school,
+        degree: entry.degree,
+        dates: entry.dates,
+      }))
 
-      for (const entry of sections.referenceEntries) {
-        this.resume.references.push({
-          id: createId(),
-          name: entry.name,
-          title: entry.title,
-          company: entry.company,
-          phone: entry.phone,
-          email: entry.email,
-        })
-      }
+      this.resume.references = sections.referenceEntries.map((entry) => ({
+        id: createId(),
+        name: entry.name,
+        title: entry.title,
+        company: entry.company,
+        relation: entry.relation,
+        phone: entry.phone,
+        email: entry.email,
+      }))
 
-      for (const skill of sections.skillLines) {
-        this.addSkill(skill)
-      }
+      this.resume.skills = [...new Set(sections.skillLines.map((s) => s.trim()).filter(Boolean))]
 
-      for (const language of sections.languageLines) {
-        const id = this.addLanguage()
-        this.updateLanguage(id, { name: language })
-      }
+      this.resume.languages = sections.languageLines.map((name) => ({
+        id: createId(),
+        name,
+        level: '',
+      }))
 
       this.persist()
     },

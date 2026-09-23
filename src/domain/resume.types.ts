@@ -28,6 +28,7 @@ export interface ReferenceEntry {
   name: string
   title: string
   company: string
+  relation: string
   phone: string
   email: string
 }
@@ -91,12 +92,15 @@ export interface ParsedReferenceEntry {
   name: string
   title: string
   company: string
+  relation: string
   phone: string
   email: string
 }
 
 export interface ParsedResumeSections {
   fullName?: string
+  title?: string
+  location?: string
   email?: string
   phone?: string
   summary?: string

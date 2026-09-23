@@ -2,6 +2,7 @@
 import { Plus, Trash2, X } from '@lucide/vue'
 
 import { useResumeStore } from '@/application/stores/resume.store'
+import DateRangeField from '@/presentation/components/edit/DateRangeField.vue'
 
 const resumeStore = useResumeStore()
 </script>
@@ -30,7 +31,7 @@ const resumeStore = useResumeStore()
         <Trash2 :size="16" :stroke-width="1.5" />
       </button>
 
-      <div class="grid grid-cols-1 gap-3 pr-10 sm:grid-cols-[1.4fr_1.2fr_1fr]">
+      <div class="grid grid-cols-1 gap-3 pr-10 sm:grid-cols-2">
         <div>
           <label class="field-label">Company</label>
           <input
@@ -49,16 +50,11 @@ const resumeStore = useResumeStore()
             @input="resumeStore.updateExperience(entry.id, { role: ($event.target as HTMLInputElement).value })"
           />
         </div>
-        <div>
-          <label class="field-label">Dates</label>
-          <input
-            class="field"
-            type="text"
-            placeholder="Jan 2022 – Present"
-            :value="entry.dates"
-            @input="resumeStore.updateExperience(entry.id, { dates: ($event.target as HTMLInputElement).value })"
-          />
-        </div>
+      </div>
+
+      <div class="mt-3 pr-10">
+        <label class="field-label">Dates</label>
+        <DateRangeField :dates="entry.dates" @update:dates="resumeStore.updateExperience(entry.id, { dates: $event })" />
       </div>
 
       <div class="mt-3">

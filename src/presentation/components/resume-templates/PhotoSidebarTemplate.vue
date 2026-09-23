@@ -137,7 +137,10 @@ const bandColor = computed(() => props.theme.secondaryColor ?? props.theme.accen
           </h2>
           <div class="mt-2.5 grid grid-cols-2 gap-x-6 gap-y-3">
             <div v-for="entry in resume.references" :key="entry.id">
-              <div class="text-[12px] font-bold text-[#111827]">{{ entry.name }}</div>
+              <div class="text-[12px] font-bold text-[#111827]">
+                {{ entry.name }}
+                <span v-if="entry.relation" class="ml-1 text-[10px] font-normal text-[#9ca3af]">({{ entry.relation }})</span>
+              </div>
               <div class="text-[11px] text-[#6b7280]">{{ [entry.title, entry.company].filter(Boolean).join(' · ') }}</div>
               <div class="mt-0.5 text-[11px] text-[#6b7280]">
                 {{ [entry.phone, entry.email].filter(Boolean).join('  ·  ') }}

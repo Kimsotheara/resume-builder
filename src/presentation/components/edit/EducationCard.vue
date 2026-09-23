@@ -2,8 +2,24 @@
 import { Plus, Trash2 } from '@lucide/vue'
 
 import { useResumeStore } from '@/application/stores/resume.store'
+import DateRangeField from '@/presentation/components/edit/DateRangeField.vue'
+import SelectField from '@/presentation/components/edit/SelectField.vue'
 
 const resumeStore = useResumeStore()
+
+const DEGREE_OPTIONS = [
+  'High School',
+  'Secondary School',
+  'Primary School',
+  'Vocational Certificate',
+  'Diploma',
+  'Associate Degree',
+  "Bachelor's Degree",
+  "Master's Degree",
+  'Doctorate (PhD)',
+  'Postgraduate Diploma',
+  'Professional Certification',
+]
 </script>
 
 <template>
@@ -29,7 +45,7 @@ const resumeStore = useResumeStore()
       >
         <Trash2 :size="16" :stroke-width="1.5" />
       </button>
-      <div class="grid grid-cols-1 gap-3 pr-10 sm:grid-cols-[1.6fr_1.4fr_1fr]">
+      <div class="grid grid-cols-1 gap-3 pr-10 sm:grid-cols-2">
         <div>
           <label class="field-label">School</label>
           <input
@@ -41,23 +57,18 @@ const resumeStore = useResumeStore()
         </div>
         <div>
           <label class="field-label">Degree</label>
-          <input
-            class="field"
-            type="text"
-            :value="entry.degree"
-            @input="resumeStore.updateEducation(entry.id, { degree: ($event.target as HTMLInputElement).value })"
+          <SelectField
+            :model-value="entry.degree"
+            :options="DEGREE_OPTIONS"
+            placeholder="Select a degree"
+            @update:model-value="resumeStore.updateEducation(entry.id, { degree: $event })"
           />
         </div>
-        <div>
-          <label class="field-label">Dates</label>
-          <input
-            class="field"
-            type="text"
-            placeholder="2015 – 2019"
-            :value="entry.dates"
-            @input="resumeStore.updateEducation(entry.id, { dates: ($event.target as HTMLInputElement).value })"
-          />
-        </div>
+      </div>
+
+      <div class="mt-3 pr-10">
+        <label class="field-label">Dates</label>
+        <DateRangeField :dates="entry.dates" @update:dates="resumeStore.updateEducation(entry.id, { dates: $event })" />
       </div>
     </div>
 
