@@ -27,7 +27,6 @@ const effectiveTheme = computed(() => ({
 const frameBox = ref<HTMLElement | null>(null)
 const resumeElement = ref<HTMLElement | null>(null)
 const naturalHeight = ref(1123)
-// Capped at MAX_FRAME_WIDTH on desktop, but measured so it shrinks to fit phone/tablet viewports too.
 const frameWidth = ref(MAX_FRAME_WIDTH)
 const scale = computed(() => frameWidth.value / PAGE_WIDTH)
 let contentResizeObserver: ResizeObserver | null = null
@@ -58,12 +57,6 @@ const frameStyle = computed(() => ({
   height: `${Math.max(naturalHeight.value * scale.value, 200)}px`,
 }))
 
-/**
- * Exports must render at true size, decoupled from the on-screen preview's visual scale-down.
- * A cloned, off-DOM copy is fragile with html2canvas (it re-clones the live document itself and
- * can measure a detached/repositioned copy as zero-height), so instead the real, attached element
- * is temporarily un-scaled in place, captured, then restored.
- */
 async function withRealSizeExport<T>(action: (element: HTMLElement) => Promise<T>): Promise<T | undefined> {
   const el = resumeElement.value
   const frame = el?.parentElement

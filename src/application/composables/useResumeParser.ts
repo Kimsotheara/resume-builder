@@ -5,7 +5,7 @@ import { extractTextFromPdf } from '@/infrastructure/parsers/pdfTextExtractor'
 import { parseResumeSections } from '@/infrastructure/parsers/resumeSectionParser'
 import type { ParsedResumeSections } from '@/domain/resume.types'
 
-export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024 // 10 MB, matches the Upload step copy
+export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 const ACCEPTED_EXTENSIONS = ['pdf', 'docx']
 
 export class UnsupportedFileError extends Error {}
@@ -15,7 +15,6 @@ function fileExtension(file: File): string {
   return file.name.split('.').pop()?.toLowerCase() ?? ''
 }
 
-/** Orchestrates upload validation, text extraction, and heuristic section splitting. */
 export function useResumeParser() {
   const isParsing = ref(false)
   const error = ref<string | null>(null)
@@ -37,8 +36,6 @@ export function useResumeParser() {
       const rawText = extension === 'pdf' ? await extractTextFromPdf(file) : await extractTextFromDocx(file)
       return parseResumeSections(rawText)
     } catch (cause) {
-      // Surfaced only as a generic message in the UI — log the real cause so it's
-      // diagnosable from the browser console instead of a dead end.
       console.error('Resume parsing failed:', cause)
       error.value = 'We could not read that file. You can still fill in the form by hand.'
       throw cause

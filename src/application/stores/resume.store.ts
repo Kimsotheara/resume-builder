@@ -46,7 +46,6 @@ function loadDraft(): ResumeData | null {
     if (!raw) return null
     const parsed = JSON.parse(raw) as Partial<ResumeData>
     const defaults = emptyResume()
-    // Drafts saved before photo/references/languages existed are missing those fields.
     return {
       ...defaults,
       ...parsed,
@@ -80,7 +79,7 @@ export const useResumeStore = defineStore('resume', {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.resume))
       } catch {
-        // localStorage may be unavailable (private mode, quota) — autosave is best-effort only.
+        void 0
       }
     },
 
@@ -231,38 +230,49 @@ export const useResumeStore = defineStore('resume', {
       this.persist()
     },
 
-    /**
-     * Best-effort import from an uploaded resume. Section text can't be reliably
-     * split into individual roles/schools by heuristics alone, so each block
-     * lands as one editable entry — the user refines it on the Edit step.
-     */
     applyParsedSections(sections: ParsedResumeSections) {
       if (sections.fullName) this.resume.personalInfo.fullName = sections.fullName
       if (sections.email) this.resume.personalInfo.email = sections.email
       if (sections.phone) this.resume.personalInfo.phone = sections.phone
       if (sections.summary) this.resume.summary = sections.summary
 
-      if (sections.experienceLines.length) {
+      for (const entry of sections.experienceEntries) {
         this.resume.experience.push({
           id: createId(),
-          company: '',
-          role: '',
-          dates: '',
-          highlights: sections.experienceLines,
+          company: entry.company,
+          role: entry.role,
+          dates: entry.dates,
+          highlights: entry.highlights.length ? entry.highlights : [''],
         })
       }
 
-      if (sections.educationLines.length) {
+      for (const entry of sections.educationEntries) {
         this.resume.education.push({
           id: createId(),
-          school: sections.educationLines[0] ?? '',
-          degree: sections.educationLines.slice(1).join(' '),
-          dates: '',
+          school: entry.school,
+          degree: entry.degree,
+          dates: entry.dates,
+        })
+      }
+
+      for (const entry of sections.referenceEntries) {
+        this.resume.references.push({
+          id: createId(),
+          name: entry.name,
+          title: entry.title,
+          company: entry.company,
+          phone: entry.phone,
+          email: entry.email,
         })
       }
 
       for (const skill of sections.skillLines) {
         this.addSkill(skill)
+      }
+
+      for (const language of sections.languageLines) {
+        const id = this.addLanguage()
+        this.updateLanguage(id, { name: language })
       }
 
       this.persist()

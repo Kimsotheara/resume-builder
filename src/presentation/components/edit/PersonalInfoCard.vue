@@ -24,7 +24,6 @@ function readFileAsImage(file: File): Promise<HTMLImageElement> {
   })
 }
 
-/** Downscales the upload to keep the autosaved localStorage draft small. */
 function toResizedDataUrl(img: HTMLImageElement): string {
   const scale = Math.min(1, MAX_PHOTO_DIMENSION / Math.max(img.width, img.height))
   const canvas = document.createElement('canvas')
@@ -44,7 +43,7 @@ async function onPhotoSelected(event: Event) {
     const img = await readFileAsImage(file)
     resumeStore.updatePersonalInfo({ photo: toResizedDataUrl(img) })
   } catch {
-    // Unreadable image file — leave the existing photo (if any) untouched.
+    void 0
   } finally {
     isReadingPhoto.value = false
     if (fileInput.value) fileInput.value.value = ''

@@ -1,6 +1,5 @@
 import html2pdf from 'html2pdf.js'
 
-/** Renders a DOM node to a PDF and triggers a download — entirely client-side. */
 export async function exportElementToPdf(element: HTMLElement, filename: string): Promise<void> {
   await html2pdf()
     .set({
@@ -14,7 +13,6 @@ export async function exportElementToPdf(element: HTMLElement, filename: string)
     .save()
 }
 
-/** Renders a DOM node to a PNG data URL and triggers a download. */
 export async function exportElementToPng(element: HTMLElement, filename: string): Promise<void> {
   const worker = html2pdf()
     .set({ html2canvas: { scale: 2, useCORS: true } })

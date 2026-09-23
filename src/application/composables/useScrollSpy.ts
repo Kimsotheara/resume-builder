@@ -1,6 +1,5 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 
-/** Tracks which of the given section ids is currently most visible in the viewport. */
 export function useScrollSpy(sectionIds: string[]) {
   const activeId = ref(sectionIds[0] ?? '')
   let observer: IntersectionObserver | null = null

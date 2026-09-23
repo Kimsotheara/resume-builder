@@ -20,8 +20,6 @@ const emit = defineEmits<{
 const { getComponent } = useTemplateRegistry()
 const component = computed(() => getComponent(props.template.family))
 
-// The card's on-screen width varies by breakpoint (1/2/3-column grid), so the
-// preview scale is measured rather than hardcoded — otherwise it clips on narrow cards.
 const previewBox = ref<HTMLElement | null>(null)
 const scale = ref(0.46)
 let resizeObserver: ResizeObserver | null = null

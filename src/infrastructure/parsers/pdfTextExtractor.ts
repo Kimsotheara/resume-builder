@@ -3,12 +3,8 @@ import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
-/** Extracts raw text from a PDF entirely in the browser — no upload, no server. */
 export async function extractTextFromPdf(file: File): Promise<string> {
   const buffer = await file.arrayBuffer()
-  // Real-world resumes exported from Word/Google Docs/Canva reference standard fonts
-  // (Helvetica, Times, ...) without embedding them. Without this, pdf.js can fail to
-  // load the document entirely while trying to resolve those glyphs.
   const doc = await pdfjsLib.getDocument({ data: buffer, standardFontDataUrl: '/standard_fonts/' }).promise
 
   const pageTexts: string[] = []
@@ -16,9 +12,6 @@ export async function extractTextFromPdf(file: File): Promise<string> {
     const page = await doc.getPage(pageNumber)
     const content = await page.getTextContent()
 
-    // Each text item marks `hasEOL` when it ends a visual line in the PDF. Without
-    // using it, a whole page collapses into one giant line and the section-heading
-    // heuristics downstream (which key off short, isolated lines) can never match.
     let pageText = ''
     for (const item of content.items) {
       if (!('str' in item)) continue

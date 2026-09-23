@@ -1,9 +1,3 @@
-/**
- * Domain layer: the shared shape every template renderer and every editing
- * form reads and writes. This is the one contract the rest of the app
- * depends on — templates never receive anything but this shape.
- */
-
 export interface PersonalInfo {
   fullName: string
   title: string
@@ -11,7 +5,6 @@ export interface PersonalInfo {
   phone: string
   location: string
   website: string
-  /** Data URL of an uploaded headshot; empty string when none is set. */
   photo: string
 }
 
@@ -81,12 +74,35 @@ export interface TemplateDefinition {
 
 export type ParseSource = 'pdf' | 'docx'
 
+export interface ParsedExperienceEntry {
+  role: string
+  company: string
+  dates: string
+  highlights: string[]
+}
+
+export interface ParsedEducationEntry {
+  degree: string
+  school: string
+  dates: string
+}
+
+export interface ParsedReferenceEntry {
+  name: string
+  title: string
+  company: string
+  phone: string
+  email: string
+}
+
 export interface ParsedResumeSections {
   fullName?: string
   email?: string
   phone?: string
   summary?: string
-  experienceLines: string[]
-  educationLines: string[]
+  experienceEntries: ParsedExperienceEntry[]
+  educationEntries: ParsedEducationEntry[]
+  referenceEntries: ParsedReferenceEntry[]
   skillLines: string[]
+  languageLines: string[]
 }

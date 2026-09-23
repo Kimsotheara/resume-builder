@@ -37,10 +37,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/*
- * Reusable pieces shared across many views (cards, form fields, buttons, chips).
- * Everything else is expressed as Tailwind utilities directly in each component.
- */
 @layer components {
   .card {
     @apply box-border rounded-md border border-border bg-surface-200 p-6;

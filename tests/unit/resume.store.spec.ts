@@ -51,15 +51,22 @@ describe('useResumeStore', () => {
       email: 'jordan@example.com',
       phone: undefined,
       summary: 'Backend engineer.',
-      experienceLines: ['Built the payments service'],
-      educationLines: ['State University', 'BS Computer Science'],
+      experienceEntries: [
+        { role: 'Software Engineer', company: 'Acme Corp', dates: '2020 - 2022', highlights: ['Built the payments service'] },
+      ],
+      educationEntries: [{ school: 'State University', degree: 'BS Computer Science', dates: '2016 - 2020' }],
+      referenceEntries: [],
       skillLines: ['Go', 'Postgres'],
+      languageLines: [],
     })
 
     expect(store.resume.personalInfo.fullName).toBe('Jordan Lee')
     expect(store.resume.personalInfo.location).toBe('Remote')
+    expect(store.resume.experience[0]?.role).toBe('Software Engineer')
+    expect(store.resume.experience[0]?.company).toBe('Acme Corp')
     expect(store.resume.experience[0]?.highlights).toEqual(['Built the payments service'])
     expect(store.resume.education[0]?.school).toBe('State University')
+    expect(store.resume.education[0]?.degree).toBe('BS Computer Science')
     expect(store.resume.skills).toEqual(['Go', 'Postgres'])
   })
 })

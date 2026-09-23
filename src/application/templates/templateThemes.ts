@@ -1,13 +1,6 @@
 import type { TemplateDefinition } from '@/domain/resume.types'
 
-/**
- * Every template on the gallery is one of the layout families rendered by
- * `presentation/components/resume-templates/*`. A "template" here is just a
- * family + a theme (colors, font). This keeps dozens of templates driven by a
- * handful of actual layout components instead of near-duplicate ones.
- */
 export const templateDefinitions: TemplateDefinition[] = [
-  // Minimal — single column, colored accent rule under the name
   {
     id: 'clarity',
     name: 'Clarity',
@@ -44,7 +37,6 @@ export const templateDefinitions: TemplateDefinition[] = [
     theme: { accentColor: '#475569', fontFamily: 'sans' },
   },
 
-  // Sidebar — two-column with a solid-color sidebar
   {
     id: 'ledger',
     name: 'Ledger',
@@ -81,7 +73,6 @@ export const templateDefinitions: TemplateDefinition[] = [
     theme: { accentColor: '#111827', secondaryColor: '#4c3f8f', fontFamily: 'sans' },
   },
 
-  // Bold header — colored header block, creative
   {
     id: 'signal',
     name: 'Signal',
@@ -118,7 +109,6 @@ export const templateDefinitions: TemplateDefinition[] = [
     theme: { accentColor: '#16a34a', fontFamily: 'sans' },
   },
 
-  // Timeline — serif, vertical timeline dots
   {
     id: 'milestone',
     name: 'Milestone',
@@ -155,7 +145,6 @@ export const templateDefinitions: TemplateDefinition[] = [
     theme: { accentColor: '#1e3a8a', fontFamily: 'serif' },
   },
 
-  // Plain — ATS-friendly, no graphics, high contrast
   {
     id: 'plainscript',
     name: 'Plainscript',
@@ -185,7 +174,6 @@ export const templateDefinitions: TemplateDefinition[] = [
     theme: { accentColor: '#1d4ed8', fontFamily: 'sans' },
   },
 
-  // Photo sidebar — dark/colored sidebar with headshot, header band beside it
   {
     id: 'portrait',
     name: 'Portrait',
@@ -222,7 +210,6 @@ export const templateDefinitions: TemplateDefinition[] = [
     theme: { accentColor: '#1c1c1f', secondaryColor: '#3f3f46', fontFamily: 'sans' },
   },
 
-  // Banner header — full-width colored band with headshot, contact row, two-column body
   {
     id: 'skyline',
     name: 'Skyline',
