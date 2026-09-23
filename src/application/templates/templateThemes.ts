@@ -1,10 +1,10 @@
 import type { TemplateDefinition } from '@/domain/resume.types'
 
 /**
- * Every template on the gallery is one of five layout families rendered by
+ * Every template on the gallery is one of the layout families rendered by
  * `presentation/components/resume-templates/*`. A "template" here is just a
- * family + a theme (colors, font). This keeps 24 templates driven by five
- * actual layout components instead of 24 near-duplicate ones.
+ * family + a theme (colors, font). This keeps dozens of templates driven by a
+ * handful of actual layout components instead of near-duplicate ones.
  */
 export const templateDefinitions: TemplateDefinition[] = [
   // Minimal — single column, colored accent rule under the name
@@ -183,5 +183,79 @@ export const templateDefinitions: TemplateDefinition[] = [
     family: 'plain',
     tags: ['ATS-friendly', 'Minimal'],
     theme: { accentColor: '#1d4ed8', fontFamily: 'sans' },
+  },
+
+  // Photo sidebar — dark/colored sidebar with headshot, header band beside it
+  {
+    id: 'portrait',
+    name: 'Portrait',
+    family: 'photo-sidebar',
+    tags: ['Two-column', 'Modern'],
+    theme: { accentColor: '#2b3648', secondaryColor: '#47536b', fontFamily: 'sans' },
+  },
+  {
+    id: 'executive',
+    name: 'Executive',
+    family: 'photo-sidebar',
+    tags: ['Two-column', 'Modern'],
+    theme: { accentColor: '#1b2a41', secondaryColor: '#2f4770', fontFamily: 'sans' },
+  },
+  {
+    id: 'harbor',
+    name: 'Harbor',
+    family: 'photo-sidebar',
+    tags: ['Two-column', 'Modern'],
+    theme: { accentColor: '#3c5068', secondaryColor: '#5c7694', fontFamily: 'sans' },
+  },
+  {
+    id: 'summit',
+    name: 'Summit',
+    family: 'photo-sidebar',
+    tags: ['Two-column', 'Modern'],
+    theme: { accentColor: '#1f3a35', secondaryColor: '#2f5c53', fontFamily: 'sans' },
+  },
+  {
+    id: 'onyx',
+    name: 'Onyx',
+    family: 'photo-sidebar',
+    tags: ['Two-column', 'Creative'],
+    theme: { accentColor: '#1c1c1f', secondaryColor: '#3f3f46', fontFamily: 'sans' },
+  },
+
+  // Banner header — full-width colored band with headshot, contact row, two-column body
+  {
+    id: 'skyline',
+    name: 'Skyline',
+    family: 'banner-header',
+    tags: ['Two-column', 'Modern'],
+    theme: { accentColor: '#0f766e', fontFamily: 'sans' },
+  },
+  {
+    id: 'azure',
+    name: 'Azure',
+    family: 'banner-header',
+    tags: ['Two-column', 'Modern'],
+    theme: { accentColor: '#1d4ed8', fontFamily: 'sans' },
+  },
+  {
+    id: 'canopy',
+    name: 'Canopy',
+    family: 'banner-header',
+    tags: ['Two-column', 'Modern'],
+    theme: { accentColor: '#15803d', fontFamily: 'sans' },
+  },
+  {
+    id: 'velvet',
+    name: 'Velvet',
+    family: 'banner-header',
+    tags: ['Two-column', 'Creative'],
+    theme: { accentColor: '#6d28d9', fontFamily: 'sans' },
+  },
+  {
+    id: 'crimson',
+    name: 'Crimson',
+    family: 'banner-header',
+    tags: ['Two-column', 'Creative'],
+    theme: { accentColor: '#be123c', fontFamily: 'sans' },
   },
 ]

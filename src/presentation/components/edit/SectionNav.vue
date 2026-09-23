@@ -11,6 +11,8 @@ const sections = [
   { id: 'experience', label: 'Experience' },
   { id: 'education', label: 'Education' },
   { id: 'skills', label: 'Skills' },
+  { id: 'languages', label: 'Languages' },
+  { id: 'references', label: 'References' },
 ]
 
 const { activeId } = useScrollSpy(sections.map((s) => s.id))

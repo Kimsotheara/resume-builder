@@ -11,6 +11,12 @@ const familyComponents: Record<TemplateFamily, Component> = {
   ),
   timeline: defineAsyncComponent(() => import('@/presentation/components/resume-templates/TimelineTemplate.vue')),
   plain: defineAsyncComponent(() => import('@/presentation/components/resume-templates/PlainTemplate.vue')),
+  'photo-sidebar': defineAsyncComponent(
+    () => import('@/presentation/components/resume-templates/PhotoSidebarTemplate.vue'),
+  ),
+  'banner-header': defineAsyncComponent(
+    () => import('@/presentation/components/resume-templates/BannerHeaderTemplate.vue'),
+  ),
 }
 
 export function useTemplateRegistry() {

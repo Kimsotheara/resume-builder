@@ -1,7 +1,14 @@
 import { defineStore } from 'pinia'
 
 import { templateDefinitions } from '@/application/templates/templateThemes'
-import type { EducationEntry, ExperienceEntry, ParsedResumeSections, ResumeData } from '@/domain/resume.types'
+import type {
+  EducationEntry,
+  ExperienceEntry,
+  LanguageEntry,
+  ParsedResumeSections,
+  ReferenceEntry,
+  ResumeData,
+} from '@/domain/resume.types'
 
 const STORAGE_KEY = 'resume-builder:draft'
 
@@ -18,11 +25,14 @@ function emptyResume(): ResumeData {
       phone: '',
       location: '',
       website: '',
+      photo: '',
     },
     summary: '',
     experience: [],
     education: [],
     skills: [],
+    references: [],
+    languages: [],
     meta: {
       activeTemplateId: 'clarity',
       accentColor: '#2563eb',
@@ -33,7 +43,17 @@ function emptyResume(): ResumeData {
 function loadDraft(): ResumeData | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? (JSON.parse(raw) as ResumeData) : null
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as Partial<ResumeData>
+    const defaults = emptyResume()
+    // Drafts saved before photo/references/languages existed are missing those fields.
+    return {
+      ...defaults,
+      ...parsed,
+      personalInfo: { ...defaults.personalInfo, ...parsed.personalInfo },
+      references: parsed.references ?? defaults.references,
+      languages: parsed.languages ?? defaults.languages,
+    }
   } catch {
     return null
   }
@@ -146,6 +166,44 @@ export const useResumeStore = defineStore('resume', {
 
     removeEducation(id: string) {
       this.resume.education = this.resume.education.filter((e) => e.id !== id)
+      this.persist()
+    },
+
+    addReference() {
+      const entry: ReferenceEntry = { id: createId(), name: '', title: '', company: '', phone: '', email: '' }
+      this.resume.references.push(entry)
+      this.persist()
+      return entry.id
+    },
+
+    updateReference(id: string, patch: Partial<Omit<ReferenceEntry, 'id'>>) {
+      const entry = this.resume.references.find((r) => r.id === id)
+      if (!entry) return
+      Object.assign(entry, patch)
+      this.persist()
+    },
+
+    removeReference(id: string) {
+      this.resume.references = this.resume.references.filter((r) => r.id !== id)
+      this.persist()
+    },
+
+    addLanguage() {
+      const entry: LanguageEntry = { id: createId(), name: '', level: '' }
+      this.resume.languages.push(entry)
+      this.persist()
+      return entry.id
+    },
+
+    updateLanguage(id: string, patch: Partial<Omit<LanguageEntry, 'id'>>) {
+      const entry = this.resume.languages.find((l) => l.id === id)
+      if (!entry) return
+      Object.assign(entry, patch)
+      this.persist()
+    },
+
+    removeLanguage(id: string) {
+      this.resume.languages = this.resume.languages.filter((l) => l.id !== id)
       this.persist()
     },
 

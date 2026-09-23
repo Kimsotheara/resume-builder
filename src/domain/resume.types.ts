@@ -11,6 +11,8 @@ export interface PersonalInfo {
   phone: string
   location: string
   website: string
+  /** Data URL of an uploaded headshot; empty string when none is set. */
+  photo: string
 }
 
 export interface ExperienceEntry {
@@ -28,6 +30,21 @@ export interface EducationEntry {
   dates: string
 }
 
+export interface ReferenceEntry {
+  id: string
+  name: string
+  title: string
+  company: string
+  phone: string
+  email: string
+}
+
+export interface LanguageEntry {
+  id: string
+  name: string
+  level: string
+}
+
 export interface ResumeMeta {
   activeTemplateId: string
   accentColor: string
@@ -39,10 +56,12 @@ export interface ResumeData {
   experience: ExperienceEntry[]
   education: EducationEntry[]
   skills: string[]
+  references: ReferenceEntry[]
+  languages: LanguageEntry[]
   meta: ResumeMeta
 }
 
-export type TemplateFamily = 'minimal' | 'sidebar' | 'bold-header' | 'timeline' | 'plain'
+export type TemplateFamily = 'minimal' | 'sidebar' | 'bold-header' | 'timeline' | 'plain' | 'photo-sidebar' | 'banner-header'
 
 export type TemplateTag = 'Modern' | 'Creative' | 'Minimal' | 'Two-column' | 'Timeline' | 'ATS-friendly'
 

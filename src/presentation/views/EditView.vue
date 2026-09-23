@@ -2,7 +2,9 @@
 import AppHeader from '@/presentation/components/layout/AppHeader.vue'
 import EducationCard from '@/presentation/components/edit/EducationCard.vue'
 import ExperienceCard from '@/presentation/components/edit/ExperienceCard.vue'
+import LanguagesCard from '@/presentation/components/edit/LanguagesCard.vue'
 import PersonalInfoCard from '@/presentation/components/edit/PersonalInfoCard.vue'
+import ReferencesCard from '@/presentation/components/edit/ReferencesCard.vue'
 import SectionNav from '@/presentation/components/edit/SectionNav.vue'
 import SkillsCard from '@/presentation/components/edit/SkillsCard.vue'
 import SummaryCard from '@/presentation/components/edit/SummaryCard.vue'
@@ -27,6 +29,8 @@ import SummaryCard from '@/presentation/components/edit/SummaryCard.vue'
           <ExperienceCard />
           <EducationCard />
           <SkillsCard />
+          <LanguagesCard />
+          <ReferencesCard />
         </div>
         <SectionNav />
       </div>
