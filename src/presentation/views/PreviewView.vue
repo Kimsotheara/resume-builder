@@ -9,8 +9,7 @@ import CustomizePanel from '@/presentation/components/preview/CustomizePanel.vue
 import ExportPanel from '@/presentation/components/preview/ExportPanel.vue'
 
 const PAGE_WIDTH = 794
-const FRAME_WIDTH = 720
-const SCALE = FRAME_WIDTH / PAGE_WIDTH
+const MAX_FRAME_WIDTH = 720
 
 const resumeStore = useResumeStore()
 const { getAll, getComponent } = useTemplateRegistry()
@@ -25,23 +24,38 @@ const effectiveTheme = computed(() => ({
   accentColor: resumeStore.resume.meta.accentColor || activeTemplate.value.theme.accentColor,
 }))
 
+const frameBox = ref<HTMLElement | null>(null)
 const resumeElement = ref<HTMLElement | null>(null)
 const naturalHeight = ref(1123)
-let resizeObserver: ResizeObserver | null = null
+// Capped at MAX_FRAME_WIDTH on desktop, but measured so it shrinks to fit phone/tablet viewports too.
+const frameWidth = ref(MAX_FRAME_WIDTH)
+const scale = computed(() => frameWidth.value / PAGE_WIDTH)
+let contentResizeObserver: ResizeObserver | null = null
+let frameResizeObserver: ResizeObserver | null = null
 
 onMounted(() => {
-  if (!resumeElement.value) return
-  resizeObserver = new ResizeObserver((entries) => {
-    const entry = entries[0]
-    if (entry) naturalHeight.value = entry.target.scrollHeight
-  })
-  resizeObserver.observe(resumeElement.value)
+  if (resumeElement.value) {
+    contentResizeObserver = new ResizeObserver((entries) => {
+      const entry = entries[0]
+      if (entry) naturalHeight.value = entry.target.scrollHeight
+    })
+    contentResizeObserver.observe(resumeElement.value)
+  }
+  if (frameBox.value) {
+    frameResizeObserver = new ResizeObserver((entries) => {
+      const entry = entries[0]
+      if (entry) frameWidth.value = entry.contentRect.width
+    })
+    frameResizeObserver.observe(frameBox.value)
+  }
 })
-onBeforeUnmount(() => resizeObserver?.disconnect())
+onBeforeUnmount(() => {
+  contentResizeObserver?.disconnect()
+  frameResizeObserver?.disconnect()
+})
 
 const frameStyle = computed(() => ({
-  width: `${FRAME_WIDTH}px`,
-  height: `${Math.max(naturalHeight.value * SCALE, 200)}px`,
+  height: `${Math.max(naturalHeight.value * scale.value, 200)}px`,
 }))
 
 /**
@@ -102,8 +116,12 @@ function onPrint() {
       </p>
 
       <div class="flex flex-col items-center gap-8 xl:flex-row xl:items-start">
-        <div class="flex-shrink-0 overflow-hidden rounded-sm bg-white shadow-md" :style="frameStyle">
-          <div ref="resumeElement" class="origin-top-left" :style="{ transform: `scale(${SCALE})` }">
+        <div
+          ref="frameBox"
+          class="w-full max-w-[720px] flex-shrink-0 overflow-hidden rounded-sm bg-white shadow-md"
+          :style="frameStyle"
+        >
+          <div ref="resumeElement" class="origin-top-left" :style="{ transform: `scale(${scale})` }">
             <component :is="activeComponent" :resume="resumeStore.resume" :theme="effectiveTheme" />
           </div>
         </div>

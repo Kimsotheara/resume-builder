@@ -4,31 +4,36 @@ import { ArrowRight, FileText, LayoutGrid, ShieldCheck, Upload } from '@lucide/v
 
 <template>
   <div class="flex min-h-screen flex-col bg-surface-100">
-    <nav class="flex h-20 flex-shrink-0 items-center justify-between border-b border-border bg-surface-200 px-12">
-      <span class="font-display text-xl font-semibold text-ink">Resume Builder</span>
-      <div class="flex items-center gap-8">
-        <router-link to="/templates" class="font-sans text-sm font-semibold text-ink-muted hover:text-ink">
+    <nav class="flex h-16 flex-shrink-0 items-center justify-between border-b border-border bg-surface-200 px-4 sm:h-20 sm:px-8 lg:px-12">
+      <span class="font-display text-lg font-semibold text-ink sm:text-xl">Resume Builder</span>
+      <div class="flex items-center gap-3 sm:gap-8">
+        <router-link
+          to="/templates"
+          class="hidden font-sans text-sm font-semibold text-ink-muted hover:text-ink sm:inline"
+        >
           Templates
         </router-link>
-        <a href="#features" class="font-sans text-sm font-semibold text-ink-muted hover:text-ink">How it works</a>
+        <a href="#features" class="hidden font-sans text-sm font-semibold text-ink-muted hover:text-ink md:inline">
+          How it works
+        </a>
         <router-link to="/upload" class="btn-primary">Start building</router-link>
       </div>
     </nav>
 
-    <section class="flex flex-shrink-0 flex-col items-center px-12 pb-[72px] pt-16 text-center">
-      <h1 class="m-0 max-w-[720px] font-display text-[40px] font-semibold leading-[46px] text-ink">
+    <section class="flex flex-shrink-0 flex-col items-center px-6 pb-12 pt-10 text-center sm:px-12 sm:pb-[72px] sm:pt-16">
+      <h1 class="m-0 max-w-[720px] font-display text-[28px] font-semibold leading-[34px] text-ink sm:text-[40px] sm:leading-[46px]">
         Build a resume that gets read, not skimmed.
       </h1>
-      <p class="mt-4 max-w-[560px] font-sans text-base leading-[26px] text-ink-muted">
+      <p class="mt-4 max-w-[560px] font-sans text-sm leading-6 text-ink-muted sm:text-base sm:leading-[26px]">
         Upload what you already have, or start fresh. Pick from templates built for how hiring actually works, then
         export a polished PDF in minutes.
       </p>
-      <div class="mt-8 flex items-center gap-4">
-        <router-link to="/upload" class="btn-primary">
+      <div class="mt-8 flex w-full max-w-xs flex-col items-stretch gap-3 sm:max-w-none sm:w-auto sm:flex-row sm:items-center sm:gap-4">
+        <router-link to="/upload" class="btn-primary w-full justify-center sm:w-auto">
           <Upload :size="18" :stroke-width="1.5" />
           Upload your resume
         </router-link>
-        <router-link to="/edit" class="btn-secondary">Start from scratch</router-link>
+        <router-link to="/edit" class="btn-secondary w-full justify-center sm:w-auto">Start from scratch</router-link>
       </div>
       <div class="mt-5 flex items-center gap-1.5 text-ink-muted">
         <ShieldCheck :size="14" :stroke-width="1.5" />
@@ -38,7 +43,7 @@ import { ArrowRight, FileText, LayoutGrid, ShieldCheck, Upload } from '@lucide/v
 
     <section
       id="features"
-      class="grid flex-shrink-0 grid-cols-1 gap-8 border-y border-border bg-surface-200 px-12 py-16 sm:grid-cols-3"
+      class="grid flex-shrink-0 grid-cols-1 gap-6 border-y border-border bg-surface-200 px-6 py-12 sm:px-12 sm:py-16 md:grid-cols-3 md:gap-8"
     >
       <div class="flex flex-col">
         <div class="flex h-12 w-12 items-center justify-center rounded-md bg-brand-tint text-brand">
@@ -71,7 +76,7 @@ import { ArrowRight, FileText, LayoutGrid, ShieldCheck, Upload } from '@lucide/v
       </div>
     </section>
 
-    <section class="border-t border-border bg-brand-tint px-12 py-16 text-center">
+    <section class="border-t border-border bg-brand-tint px-6 py-12 text-center sm:px-12 sm:py-16">
       <h2 class="m-0 font-display text-[28px] font-semibold leading-[34px] text-ink">Ready to build yours?</h2>
       <p class="mb-6 mt-2 font-sans text-[15px] leading-[22px] text-ink-muted">
         Takes about five minutes, start to a finished PDF.

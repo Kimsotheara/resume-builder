@@ -31,7 +31,7 @@ function scrollTo(id: string) {
 </script>
 
 <template>
-  <div class="card sticky top-6 w-full flex-shrink-0 p-4 lg:w-80">
+  <div class="card w-full flex-shrink-0 p-4 lg:sticky lg:top-6 lg:w-80">
     <span class="font-sans text-[13px] font-semibold uppercase tracking-[0.4px] text-ink-muted">Sections</span>
     <nav class="mt-3 flex flex-col gap-0.5">
       <a

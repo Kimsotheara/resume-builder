@@ -23,10 +23,10 @@ function stateOf(index: number): 'done' | 'active' | 'upcoming' {
 </script>
 
 <template>
-  <div class="box-border w-full border-b border-border bg-surface-200 px-12 py-6">
+  <div class="box-border w-full border-b border-border bg-surface-200 px-4 py-4 sm:px-8 sm:py-6 lg:px-12">
     <div class="mx-auto flex max-w-[640px] items-center">
       <template v-for="(step, index) in steps" :key="step.key">
-        <router-link :to="step.route" class="flex items-center gap-2">
+        <router-link :to="step.route" class="flex items-center gap-2" :aria-label="step.label">
           <span
             class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-sans text-[13px] font-semibold"
             :class="{
@@ -39,7 +39,7 @@ function stateOf(index: number): 'done' | 'active' | 'upcoming' {
             <template v-else>{{ step.number }}</template>
           </span>
           <span
-            class="font-sans text-[13px] font-semibold"
+            class="hidden font-sans text-[13px] font-semibold sm:inline"
             :class="stateOf(index) === 'upcoming' ? 'text-ink-muted' : 'text-ink'"
           >
             {{ step.label }}
@@ -47,7 +47,7 @@ function stateOf(index: number): 'done' | 'active' | 'upcoming' {
         </router-link>
         <div
           v-if="index < steps.length - 1"
-          class="mx-3 h-px flex-1"
+          class="mx-2 h-px flex-1 sm:mx-3"
           :class="stateOf(index) === 'done' ? 'bg-accent' : 'bg-border'"
         />
       </template>
