@@ -6,7 +6,10 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker
 /** Extracts raw text from a PDF entirely in the browser — no upload, no server. */
 export async function extractTextFromPdf(file: File): Promise<string> {
   const buffer = await file.arrayBuffer()
-  const doc = await pdfjsLib.getDocument({ data: buffer }).promise
+  // Real-world resumes exported from Word/Google Docs/Canva reference standard fonts
+  // (Helvetica, Times, ...) without embedding them. Without this, pdf.js can fail to
+  // load the document entirely while trying to resolve those glyphs.
+  const doc = await pdfjsLib.getDocument({ data: buffer, standardFontDataUrl: '/standard_fonts/' }).promise
 
   const pageTexts: string[] = []
   for (let pageNumber = 1; pageNumber <= doc.numPages; pageNumber += 1) {

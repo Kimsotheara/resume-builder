@@ -37,6 +37,9 @@ export function useResumeParser() {
       const rawText = extension === 'pdf' ? await extractTextFromPdf(file) : await extractTextFromDocx(file)
       return parseResumeSections(rawText)
     } catch (cause) {
+      // Surfaced only as a generic message in the UI — log the real cause so it's
+      // diagnosable from the browser console instead of a dead end.
+      console.error('Resume parsing failed:', cause)
       error.value = 'We could not read that file. You can still fill in the form by hand.'
       throw cause
     } finally {
