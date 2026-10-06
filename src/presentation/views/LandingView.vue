@@ -4,7 +4,9 @@ import { ArrowRight, FileText, LayoutGrid, ShieldCheck, Upload } from '@lucide/v
 
 <template>
   <div class="flex min-h-screen flex-col bg-surface-100">
-    <nav class="flex h-16 flex-shrink-0 items-center justify-between border-b border-border bg-surface-200 px-4 sm:h-20 sm:px-8 lg:px-12">
+    <nav
+      class="flex h-16 flex-shrink-0 items-center justify-between border-b border-border bg-surface-200 px-4 sm:h-20 sm:px-8 lg:px-12"
+    >
       <span class="font-display text-lg font-semibold text-ink sm:text-xl">Resume Builder</span>
       <div class="flex items-center gap-3 sm:gap-8">
         <router-link
@@ -13,6 +15,18 @@ import { ArrowRight, FileText, LayoutGrid, ShieldCheck, Upload } from '@lucide/v
         >
           Templates
         </router-link>
+        <router-link
+          to="/convert/pdf"
+          class="hidden font-sans text-sm font-semibold text-ink-muted hover:text-ink sm:inline"
+        >
+          Convert PDF
+        </router-link>
+        <router-link
+          to="/convert/word"
+          class="hidden font-sans text-sm font-semibold text-ink-muted hover:text-ink sm:inline"
+        >
+          Convert Word
+        </router-link>
         <a href="#features" class="hidden font-sans text-sm font-semibold text-ink-muted hover:text-ink md:inline">
           How it works
         </a>
@@ -20,15 +34,21 @@ import { ArrowRight, FileText, LayoutGrid, ShieldCheck, Upload } from '@lucide/v
       </div>
     </nav>
 
-    <section class="flex flex-shrink-0 flex-col items-center px-6 pb-12 pt-10 text-center sm:px-12 sm:pb-[72px] sm:pt-16">
-      <h1 class="m-0 max-w-[720px] font-display text-[28px] font-semibold leading-[34px] text-ink sm:text-[40px] sm:leading-[46px]">
+    <section
+      class="flex flex-shrink-0 flex-col items-center px-6 pb-12 pt-10 text-center sm:px-12 sm:pb-[72px] sm:pt-16"
+    >
+      <h1
+        class="m-0 max-w-[720px] font-display text-[28px] font-semibold leading-[34px] text-ink sm:text-[40px] sm:leading-[46px]"
+      >
         Build a resume that gets read, not skimmed.
       </h1>
       <p class="mt-4 max-w-[560px] font-sans text-sm leading-6 text-ink-muted sm:text-base sm:leading-[26px]">
         Upload what you already have, or start fresh. Pick from templates built for how hiring actually works, then
         export a polished PDF in minutes.
       </p>
-      <div class="mt-8 flex w-full max-w-xs flex-col items-stretch gap-3 sm:max-w-none sm:w-auto sm:flex-row sm:items-center sm:gap-4">
+      <div
+        class="mt-8 flex w-full max-w-xs flex-col items-stretch gap-3 sm:max-w-none sm:w-auto sm:flex-row sm:items-center sm:gap-4"
+      >
         <router-link to="/upload" class="btn-primary w-full justify-center sm:w-auto">
           <Upload :size="18" :stroke-width="1.5" />
           Upload your resume

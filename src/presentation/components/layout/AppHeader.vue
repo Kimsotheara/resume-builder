@@ -2,6 +2,8 @@
 import { Check } from '@lucide/vue'
 import { computed } from 'vue'
 
+import ConvertNav from '@/presentation/components/layout/ConvertNav.vue'
+
 const props = defineProps<{
   currentStep: 'upload' | 'edit' | 'templates' | 'preview'
 }>()
@@ -23,6 +25,7 @@ function stateOf(index: number): 'done' | 'active' | 'upcoming' {
 </script>
 
 <template>
+  <ConvertNav />
   <div class="box-border w-full border-b border-border bg-surface-200 px-4 py-4 sm:px-8 sm:py-6 lg:px-12">
     <div class="flex items-center gap-3 sm:gap-6">
       <router-link to="/" class="shrink-0 font-display text-base font-semibold text-ink hover:text-brand sm:text-lg">

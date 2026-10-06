@@ -1,7 +1,17 @@
 <script setup lang="ts">
 import type { TemplateTag } from '@/domain/resume.types'
+import ChipGroup from '@/presentation/components/layout/ChipGroup.vue'
 
-const FILTERS: Array<TemplateTag | 'All'> = ['All', 'Modern', 'Creative', 'Minimal', 'Two-column', 'Timeline', 'ATS-friendly']
+const FILTERS: Array<TemplateTag | 'All'> = [
+  'All',
+  'Modern',
+  'Creative',
+  'Minimal',
+  'Two-column',
+  'Timeline',
+  'ATS-friendly',
+]
+const OPTIONS = FILTERS.map((filter) => ({ value: filter, label: filter }))
 
 defineProps<{
   activeFilter: TemplateTag | 'All'
@@ -13,16 +23,11 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="mb-8 flex flex-wrap gap-2">
-    <button
-      v-for="filter in FILTERS"
-      :key="filter"
-      type="button"
-      class="chip"
-      :class="{ 'chip-on': activeFilter === filter }"
-      @click="emit('select', filter)"
-    >
-      {{ filter }}
-    </button>
-  </div>
+  <ChipGroup
+    class="mb-8"
+    label="Template style"
+    :options="OPTIONS"
+    :model-value="activeFilter"
+    @update:model-value="emit('select', $event)"
+  />
 </template>

@@ -26,6 +26,18 @@ const routes = [
     name: 'preview',
     component: () => import('@/presentation/views/PreviewView.vue'),
   },
+  {
+    path: '/convert/pdf',
+    name: 'convert-pdf',
+    component: () => import('@/presentation/views/ConvertView.vue'),
+    props: { kind: 'pdf' },
+  },
+  {
+    path: '/convert/word',
+    name: 'convert-word',
+    component: () => import('@/presentation/views/ConvertView.vue'),
+    props: { kind: 'word' },
+  },
 ]
 
 export const router = createRouter({
